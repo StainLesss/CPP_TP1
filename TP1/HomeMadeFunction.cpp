@@ -218,6 +218,7 @@ bool conformIntegerOnly(string UsrName){
     int len = UsrName.length();
     for(int i =0 ; i<len;i++){
         if(!isdigit(UsrName[i])){
+            cout << "ERREUR : ne contient pas exclusivement des chiffres";
             return false;
         }
     }
@@ -255,27 +256,49 @@ void guessMyNumberPlay(int min,int max){
         }
     }
 }
-int nextTry(int* min,int* max){
-    int mid = static_cast<int>((*min+*max)/2);
+int nextTry(int* inf,int* sup,int* val){
+
+    int mid = static_cast<int>((*inf+*sup)/2);
 
     cout << mid <<endl; //DEBUG to delete
     return 0;
 }
 
+int get_avg(int a,int b){
+    return (a+b)/2;
+}
+
 int guessMyNumberForPC(int min,int max){
-   string UserNumber = AskAndRecordWord("Merci de choisir un numéro entre 0 et 1000");
-   bool stayloop = true;
-   int moy = static_cast<int>((min+max)/2); // arondi inf
-   //while (stayloop){
+    string usrInput;
+    int avg = get_avg(min,max);//arrondie inf
+    int cpuNumber = avg;
+    int usrNumber;
 
-   //}
+    do{
+        usrInput = AskAndRecordWord("Merci de choisir un numéro entre " + to_string(min)+" et " +to_string(max));
+   } while(!conformIntegerOnly(usrInput));
+   usrNumber = stoi(usrInput);
 
+   say("Je vais essayer de deviner ! Saisir + si c'est plus grand, - si c'est plus petit");
+   while (cpuNumber != usrNumber){
+        string usrHelp = AskAndRecordWord("Est-ce : " + to_string(cpuNumber) +" ?");
 
+        if((usrHelp.length()==1) && ( (usrHelp == "+")||(usrHelp == "-") )){
+            if((usrHelp == "+")){
+                min = cpuNumber+1;
+                cpuNumber = get_avg(min,max);
+            }
+            else if((usrHelp == "-")){
+                max = cpuNumber-1;
+                cpuNumber = get_avg(min,max);
+            }
+        }
 
+        else{say("Saisie non conforme..");}
+   }
+   cout << "Je sais ! Ton chiffre est " << cpuNumber<<endl;
 
-   return moy;
-
-
+   return avg;
 }
 
 
